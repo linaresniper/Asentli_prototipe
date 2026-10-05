@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>AsentliCard · Compra semanal VR</title>
+  <meta name="description" content="Prototipo de realidad virtual: compra semanal de canasta básica pagada con AsentliCard sin contacto." />
+  <meta name="theme-color" content="#003223" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <div id="overlay">
+    <div class="card">
+      <div class="brand">
+        <svg viewBox="0 0 40 40" class="mark" aria-hidden="true">
+          <rect width="40" height="40" rx="11" fill="#FF6400" />
+          <path d="M10.4 27.2 20 11.2l9.6 16" fill="none" stroke="#F5EBE1" stroke-width="5.2" stroke-linecap="round" stroke-linejoin="round" />
+          <circle cx="20" cy="28" r="3" fill="#8CC850" />
+        </svg>
+        <span>asentli</span>
+      </div>
+      <h1>Compra semanal con <em>AsentliCard</em></h1>
+      <p class="lead">Recorre el supermercado, llena tu carrito con la canasta básica, controla tu gasto y paga sin contacto.</p>
+      <ol class="steps">
+        <li>Lista</li><li>Supermercado</li><li>Carrito</li><li>Caja</li><li>Pago contactless</li><li>Comprobante</li>
+      </ol>
+      <div class="actions">
+        <button id="btn-vr" class="primary" disabled>Comprobando VR…</button>
+        <button id="btn-desktop" class="secondary">Modo escritorio</button>
+      </div>
+      <div class="help">
+        <div><strong>VR:</strong> apunta y usa el gatillo o pellizca para tomar; apunta al piso para moverte (teletransporte); joystick derecho para girar.</div>
+        <div><strong>Escritorio:</strong> arrastra para mirar · WASD/flechas para caminar · clic en el piso para avanzar · clic para tomar/colocar · <kbd>L</kbd> lista.</div>
+      </div>
+      <p class="disclaimer">Prototipo demostrativo. Precios ficticios, no son precios reales del mercado. La tarjeta y sus datos son ficticios.</p>
+    </div>
+  </div>
+  <div id="loading">Cargando supermercado…</div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

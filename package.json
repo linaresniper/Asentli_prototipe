@@ -1,0 +1,21 @@
+{
+  "name": "asentli-vr-compra-semanal",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Prototipo WebXR: compra semanal de canasta básica pagada con AsentliCard (contactless).",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:quest": "vite --mode quest --host",
+    "build": "vite build",
+    "preview": "vite preview --host",
+    "test:e2e": "node tests/e2e.mjs"
+  },
+  "dependencies": {
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "vite": "^8.0.0"
+  }
+}
