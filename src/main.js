@@ -7,10 +7,26 @@ async function loadFonts() {
   await Promise.race([Promise.all(loads), new Promise((r) => setTimeout(r, 2500))]).catch(() => {});
 }
 
+const params = new URLSearchParams(location.search);
+const CAPTURE = params.get('capture');
+
+// PRNG con semilla para que cada worker de captura genere exactamente la misma escena.
+function seedRandom(seed) {
+  let a = seed >>> 0;
+  Math.random = () => {
+    a = (a + 0x6D2B79F5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 async function boot() {
   await loadFonts();
+  if (CAPTURE) seedRandom(20261015);
 
-  const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+  const renderer = new THREE.WebGLRenderer({ antialias: !CAPTURE, powerPreference: 'high-performance', preserveDrawingBuffer: !!CAPTURE });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setSize(innerWidth, innerHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -24,8 +40,19 @@ async function boot() {
   const game = new Game(renderer);
   game.init();
 
+  if (CAPTURE) {
+    const { setupCapture } = await import('./capture/capture.js');
+    document.getElementById('loading').remove();
+    document.getElementById('overlay').classList.add('hidden');
+    window.__cap = setupCapture(game, renderer, {
+      width: Number(params.get('width')) || 2880,
+      face: Number(params.get('face')) || 1024,
+    });
+    return;
+  }
+
   // `?maxdt=` solo para pruebas automatizadas con GPU por software.
-  const maxDt = Number(new URLSearchParams(location.search).get('maxdt')) || 0.05;
+  const maxDt = Number(params.get('maxdt')) || 0.05;
   let last = performance.now();
   renderer.setAnimationLoop((now) => {
     const dt = Math.min(maxDt, (now - last) / 1000);

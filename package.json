@@ -9,7 +9,8 @@
     "dev:quest": "vite --mode quest --host",
     "build": "vite build",
     "preview": "vite preview --host",
-    "test:e2e": "node tests/e2e.mjs"
+    "test:e2e": "node tests/e2e.mjs",
+    "video:360": "node tools/render-360.mjs"
   },
   "dependencies": {
     "three": "^0.186.1"

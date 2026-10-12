@@ -541,7 +541,9 @@ export class Game {
       L.quaternion.slerpQuaternions(q0, _q.identity(), k);
       L.scale.setScalar(s0 + (0.9 - s0) * k);
     });
-    const how = this.isXR
+    const how = this.capture
+      ? 'Cada producto que tomas se marca en tu lista y suma al total.'
+      : this.isXR
       ? 'Apunta a un producto y mantén el gatillo (o pellizca) para tomarlo; suéltalo sobre el carrito.'
       : 'Haz clic en un producto para tomarlo y vuelve a hacer clic para ponerlo en el carrito.';
     this.showToast('Busca los productos de tu lista', how, { icon: 'list', duration: 8 });
@@ -806,7 +808,8 @@ export class Game {
       g.quaternion.copy(q).multiply(_q.setFromAxisAngle(_v2.set(0, 1, 0), (1 - k) * Math.PI * 2));
       g.scale.setScalar(Math.max(0.01, k));
     }, Ease.outCubic);
-    const how = this.isXR ? 'Toma tu tarjeta con el gatillo o pellizcando.' : 'Haz clic en la tarjeta para sacarla.';
+    const how = this.capture ? 'Saca tu tarjeta para pagar sin contacto.'
+      : this.isXR ? 'Toma tu tarjeta con el gatillo o pellizcando.' : 'Haz clic en la tarjeta para sacarla.';
     this.showToast('Utiliza tu AsentliCard para realizar el pago.', how, { tone: 'pay', icon: 'card' });
   }
 
@@ -826,7 +829,8 @@ export class Game {
       this.card.halo.material.opacity = 0.8 * (1 - k);
     }, Ease.outCubic);
     this.posRingOn = true;
-    const how = this.isXR ? 'Acerca la tarjeta a la pantalla de la terminal.' : 'Haz clic en la terminal POS para acercar la tarjeta.';
+    const how = this.capture ? 'Acércala a la pantalla de la terminal POS.'
+      : this.isXR ? 'Acerca la tarjeta a la pantalla de la terminal.' : 'Haz clic en la terminal POS para acercar la tarjeta.';
     this.showToast('Acerca tu AsentliCard a la terminal', how, { tone: 'pay', icon: 'card' });
   }
 
@@ -917,7 +921,7 @@ export class Game {
     this.state = 'receipt';
     const ck = this.checkout;
     const r = this.receipt;
-    const now = new Date();
+    const now = this.fixedDate || new Date();
     r.redraw({
       lines: this.cartItems.map((u) => ({ name: u.product.listName || u.product.name, price: u.product.price })),
       count: this.cartItems.length,
@@ -939,7 +943,8 @@ export class Game {
     r.material.clippingPlanes = null;
     r.material.needsUpdate = true;
     this.receiptReady = true;
-    const how = this.isXR ? 'Apunta al ticket y presiona el gatillo.' : 'Haz clic en el ticket que salió de la impresora.';
+    const how = this.capture ? 'Tu ticket salió de la impresora del POS.'
+      : this.isXR ? 'Apunta al ticket y presiona el gatillo.' : 'Haz clic en el ticket que salió de la impresora.';
     this.showToast('Toma tu comprobante', how, { tone: 'pay', icon: 'list' });
     const token = this.receiptToken = {};
     await this.tweens.wait(8);
@@ -983,7 +988,7 @@ export class Game {
     const b = this.btnFinal;
     b.position.copy(sp).add(_v.set(0, -0.32, 0));
     b.quaternion.copy(s.quaternion);
-    b.visible = true;
+    b.visible = !this.capture;
     const token = this.summaryToken = {};
     await this.tweens.wait(9);
     if (AUTO && this.state === 'summary' && this.summaryToken === token) this.goOutro();
@@ -1041,7 +1046,7 @@ export class Game {
     const b = this.btnRestart;
     b.position.set(OUTRO_STAGE.x + 0.85, 1.15, OUTRO_STAGE.z + 0.55);
     b.rotation.set(0, -0.45, 0);
-    b.visible = true;
+    b.visible = !this.capture;
     if (EXPO) {
       await this.tweens.wait(25);
       if (this.state === 'outro') this.restart();
@@ -1300,7 +1305,7 @@ export class Game {
       if (this.movedRecently > 0 || Math.abs(angleDiff(this.cartHeadingTarget, yaw)) > 0.95) this.cartHeadingTarget = yaw;
       this.cartHeading = lerpAngle(this.cartHeading, this.cartHeadingTarget, 1 - Math.exp(-dt * 2.5));
       const f = this.forward(this.cartHeading, _v2);
-      const dist = this.isXR ? 0.62 : 0.95;
+      const dist = this.capture ? 0.85 : this.isXR ? 0.62 : 0.95;
       let x = h.x + f.x * dist, z = h.z + f.z * dist;
       for (const b of this.obstacles) {
         const pad = 0.3;
@@ -1330,7 +1335,7 @@ export class Game {
   snapCart() {
     const h = this.headPos(_v);
     const f = this.forward(this.cartHeading, _v2);
-    const dist = this.isXR ? 0.62 : 0.95;
+    const dist = this.capture ? 0.85 : this.isXR ? 0.62 : 0.95;
     this.cart.group.position.set(h.x + f.x * dist, 0, h.z + f.z * dist);
     this.cart.group.rotation.y = this.cartHeading;
   }
