@@ -50,6 +50,15 @@ Parámetros de URL opcionales:
 - `?expo=1` — reinicia la demo automáticamente 25 s después de la escena final.
 - `?guia=0` — oculta el indicador que señala el siguiente producto pendiente.
 
+## Visores ClassVR (sin WebXR)
+
+Para visores como ClassVR CVR-255-64 el prototipo se exporta como **video 360° MP4** y la tarjeta como **modelo GLB**, que se suben al portal de ClassVR. Ver [`classvr/LEEME.md`](classvr/LEEME.md).
+
+```bash
+npm run build
+npm run video:360          # opciones: --width 2880 --face 1024 --workers 4 --lite 1920
+```
+
 ## Personalización
 
 - **Identidad visual:** `src/config/brand.js` (paleta Pumpkin Orange `#FF6400`, Eggshell White `#F5EBE1`, Salad Green `#8CC850`, Bottle Green `#003223`, logotipo y textos).
