@@ -4,4 +4,3 @@ tests/screens/
 *.log
 .DS_Store
 classvr/.tmp/
-classvr/*.mp4
