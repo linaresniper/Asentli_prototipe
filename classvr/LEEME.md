@@ -8,7 +8,7 @@ Los visores ClassVR (por ejemplo **CVR-255-64**) no tienen controles de mano ni 
 | `AsentliCard-ClassVR-360-1920x960.mp4` | Mismo video, más liviano | Úsalo si el de 2880 se traba o tarda mucho en descargarse al visor |
 | `AsentliCard.glb` | Modelo 3D de la AsentliCard (chip EMV, símbolo NFC, logotipo) | Se puede girar y observar la tarjeta de cerca |
 
-Los videos no están en el repositorio por su tamaño; se generan con `npm run build && npm run video:360` (requiere `ffmpeg` y Playwright). El GLB sí está incluido.
+Los tres archivos están en esta carpeta. Para volver a generar los videos después de cambiar la escena: `npm run build && npm run video:360` (requiere `ffmpeg` y Playwright).
 
 ## Subir y enviar a los visores
 
